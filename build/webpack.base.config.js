@@ -4,6 +4,13 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 //  "build:client": "cross-env NODE_ENV=production webpack --config ./build/webpack.client.config.js --progress --hide-modules",
 
+function babelLoaderExcludeNodeModulesExcept(exceptionList) {
+    if (Array.isArray(exceptionList) && exceptionList.length) {
+        return new RegExp(`node_modules[\\/|\\\\](?!(${exceptionList.join('|')})).*`, 'i');
+    }
+    return /node_modules/i;
+}
+
 module.exports = {
   entry: path.resolve(__dirname, '../src/index.js'),
   output: {
@@ -18,11 +25,11 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader'
       },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
-      },
+        {
+            test: /\.js$/,
+            loader: 'babel-loader',
+            exclude: babelLoaderExcludeNodeModulesExcept(['escape-goat','msgdown'])
+        },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
         use: [
@@ -39,6 +46,6 @@ module.exports = {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-    new UglifyJSPlugin()
+    //new UglifyJSPlugin()
   ]
 }

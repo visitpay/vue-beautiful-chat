@@ -27,7 +27,8 @@
       :suggestions="getSuggestions()"
       :showFile="showFile"
       :placeholder="placeholder"
-      :colors="colors" />
+      :colors="colors"
+      :onKeyUp="onKeyUp" />
   </div>
 </template>
 
@@ -66,6 +67,10 @@ export default {
       default: ''
     },
     onUserInputSubmit: {
+      type: Function,
+      required: true
+    },
+    onKeyUp: {
       type: Function,
       required: true
     },
