@@ -13,6 +13,7 @@
         @focus="setInputActive(true)"
         @blur="setInputActive(false)"
         @keydown="handleKey"
+        @keyup="onKeyUp"
         contentEditable="true"
         :placeholder="placeholder"
         class="sc-user-input--text"
@@ -70,6 +71,10 @@ export default {
     placeholder: {
       type: String,
       default: 'Write a reply'
+    },
+    onKeyUp: {
+      type: Function,
+      required: true
     },
     colors: {
       type: Object,

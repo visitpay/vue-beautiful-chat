@@ -22,6 +22,7 @@
       :colors="colors"
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :messageStyling="messageStyling"
+      :onKeyUp="onKeyUp"
     />
   </div>
 </template>
@@ -81,6 +82,10 @@ export default {
     showTypingIndicator: {
       type: String,
       default: () => ''
+    },
+    onKeyUp: {
+      type: Function,
+      required: true
     },
     colors: {
       type: Object,
