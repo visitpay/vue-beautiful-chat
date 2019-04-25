@@ -1,14 +1,21 @@
 <template>
-  <div class="sc-message">
+  <div class="sc-message" :style="{ width: messageWidth }">
     <div class="sc-message--content" :class="{
         sent: message.author === 'me',
         received: message.author !== 'me' && message.type !== 'system',
         system: message.type === 'system'
       }">
-      <div v-if="message.type !== 'system'" :title="authorName" class="sc-message--avatar" :style="{
+      <div v-if="message.type !== 'system' && chatImageUrl !== null" :title="authorName" class="sc-message--avatar" :style="{
         backgroundImage: `url(${chatImageUrl})`
       }" v-tooltip="message.author"></div>
-      <TextMessage v-if="message.type === 'text'" :data="message.data" :messageColors="determineMessageColors()" :messageStyling="messageStyling" />
+      <div v-else-if="message.type !== 'system' && chatImageUrl == null" :title="authorName" class="sc-message--avatar sc-message--avatar-initials" v-tooltip="message.author" :style="{
+        backgroundColor: colors.header.bg
+      }">
+        <span class="sc-message--avatar-initials-text" :style="{
+        color: colors.header.text
+      }">{{ authorInitials() }}</span>
+      </div>
+      <TextMessage v-if="message.type === 'text'" :data="message.data" :messageColors="determineMessageColors()" :messageStyling="messageStyling" :styles="styles" />
       <EmojiMessage v-else-if="message.type === 'emoji'" :data="message.data" />
       <FileMessage v-else-if="message.type === 'file'" :data="message.data" :messageColors="determineMessageColors()" />
       <TypingMessage v-else-if="message.type === 'typing'" :messageColors="determineMessageColors()" />
@@ -45,7 +52,7 @@ export default {
     },
     chatImageUrl: {
       type: String,
-      default: chatIcon
+      default: null
     },
     colors: {
       type: Object,
@@ -57,9 +64,22 @@ export default {
     messageStyling: {
       type: Boolean,
       required: true
+    },
+    styles: {
+      type: Object,
+      required: true
     }
   },
   methods: {
+    authorInitials() {
+      if (this.authorName) {
+        var initials = this.authorName.match(/\b\w/g) || [];
+        initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
+        return initials;
+      } else {
+        return '';
+      }
+    },
     sentColorsStyle() {
       return {
         color: this.colors.sentMessage.text,
@@ -74,6 +94,17 @@ export default {
     },
     determineMessageColors() {
       return this.message.author === 'me' ? this.sentColorsStyle() : this.receivedColorsStyle()
+    }
+  },
+  computed: {
+    messageWidth() {
+      if (this.styles.window && this.styles.window.width) {
+        var windowWidth = parseInt(this.styles.window.width);
+        var widthToUse = `${windowWidth - 70}px`;
+        return widthToUse;
+      } else {
+        return '300px';
+      }
     }
   }
 }
@@ -103,6 +134,16 @@ export default {
   display: none;
 }
 
+/*
+TODO: For initials
+backgroundColor: incoming color
+text-align: center
+
+put span inside the div with initials, add class with:
+line-height: 30px;
+
+TODO: Inverse color for text in initials
+*/
 .sc-message--avatar {
   background-repeat: no-repeat;
   background-size: 100%;
@@ -112,6 +153,16 @@ export default {
   border-radius: 50%;
   align-self: center;
   margin-right: 15px;
+}
+
+.sc-message--avatar-initials {
+  text-align: center;
+}
+
+.sc-message--avatar-initials-text {
+  line-height: 30px;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .sc-message--meta {
@@ -133,9 +184,19 @@ export default {
   font-weight: 300;
   font-size: 14px;
   line-height: 1.4;
-  white-space: pre-wrap;
+  /*white-space: pre-wrap;*/
+  white-space: normal;
   -webkit-font-smoothing: subpixel-antialiased
 }
+
+.sc-message--text > p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
 .sc-message--content.sent .sc-message--text {
   color: white;
   background-color: #4e8cff;

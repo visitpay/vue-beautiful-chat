@@ -57,7 +57,8 @@ Vue.use(Chat)
       :showTypingIndicator="showTypingIndicator"
       :colors="colors"
       :alwaysScrollToBottom="alwaysScrollToBottom"
-      :messageStyling="messageStyling" />
+      :messageStyling="messageStyling"
+      :onKeyUp="onKeyUp" />
   </div>
 </template>
 ```
@@ -160,7 +161,8 @@ Launcher props:
 | showFile | Boolean | A bool indicating whether or not to show the file chooser button
 | showTypingIndicator | Boolean | A bool indicating whether or not to show the `typing` indicator
 | colors | Object | An object containing the specs of the colors used to paint the component. [See here](#faq)
-| messageStyling | Boolean | A bool indicating whether or not to enable `msgdown` support for message formatting in chat. [See here](#faq)
+| messageStyling | Boolean | A bool indicating whether or not to enable `msgdown` support for message formatting in chat. [See here](#faq) |
+| onKeyUp | function(event) | Called on keyup event in the input field
 
 
 ### Message Objects
