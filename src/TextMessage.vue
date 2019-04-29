@@ -1,6 +1,6 @@
 <template>
   <div class="sc-message--text" :style="messageColors">
-    <p v-html="messageText"></p>
+    <p v-html="messageText" :style="{ maxWidth: maxTextWidth }"></p>
     <p v-if="data.meta" class='sc-message--meta' :style="{color: messageColors.color}">{{data.meta}}</p>
   </div>
 </template>
@@ -23,6 +23,10 @@ export default {
     messageStyling: {
       type: Boolean,
       required: true
+    },
+    styles: {
+      type: Object,
+      required: true
     }
   },
   computed: {
@@ -33,6 +37,15 @@ export default {
         className: 'chatLink',
         truncate: { length: 50, location: 'smart' }
       })
+    },
+    maxTextWidth() {
+      if (this.styles.window && this.styles.window.width) {
+        var windowWidth = parseInt(this.styles.window.width);
+        var widthToUse = `${windowWidth - 150}px`;
+        return widthToUse;
+      } else {
+        return '';
+      }
     }
   }
 }

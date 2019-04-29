@@ -18,7 +18,7 @@
         :placeholder="placeholder"
         class="sc-user-input--text"
         ref="userInput"
-        :style="{color: colors.userInput.text}"
+        :style="{ color: colors.userInput.text, width: inputWidth }"
       >
       </div>
       <div class="sc-user-input--buttons">
@@ -77,6 +77,10 @@ export default {
       required: true
     },
     colors: {
+      type: Object,
+      required: true
+    },
+    styles: {
       type: Object,
       required: true
     }
@@ -144,6 +148,17 @@ export default {
     _handleFileSubmit (file) {
       this.file = file
     }
+  },
+  computed: {
+    inputWidth() {
+      if (this.styles.window && this.styles.window.width) {
+        var windowWidth = parseInt(this.styles.window.width);
+        var widthToUse = `${windowWidth - 100}px`;
+        return widthToUse;
+      } else {
+        return '300px';
+      }
+    }
   }
 }
 </script>
@@ -189,6 +204,7 @@ export default {
   /* color: rgba(86, 88, 103, 0.3); */
   filter: contrast(15%);
   outline: none;
+  cursor: text;
 }
 
 .sc-user-input--buttons {

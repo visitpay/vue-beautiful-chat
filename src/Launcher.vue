@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="sc-launcher" :class="{opened: isOpen}" @click.prevent="isOpen ? close() : open()" :style="{backgroundColor: colors.launcher.bg}">
+    <div v-if="styles.launcher.visible" class="sc-launcher" :class="{opened: isOpen}" @click.prevent="isOpen ? close() : open()" :style="{backgroundColor: colors.launcher.bg}">
       <div v-if="newMessagesCount > 0 && !isOpen" class="sc-new-messsages-count">
         {{newMessagesCount}}
       </div>
@@ -23,6 +23,8 @@
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :messageStyling="messageStyling"
       :onKeyUp="onKeyUp"
+      :styles="styles"
+      :inputEnabled="inputEnabled"
     />
   </div>
 </template>
@@ -130,6 +132,33 @@ export default {
         }
       }
     },
+    styles: {
+      type: Object,
+      required: false,
+      validator: c => 
+        'header' in c
+        && 'visible' in c.header
+        && 'launcher' in c
+        && 'visible' in c.launcher
+        && 'window' in c
+        && 'width' in c.window && 'height' in c.window,
+      default: function () {
+        return {
+          header: {
+            visible: true
+          },
+          window: {
+            width: '350px',
+            height: '450px',
+            bottom: '100px',
+            right: '25px'
+          },
+          launcher: {
+            visible: true
+          }
+        }
+      }
+    },
     alwaysScrollToBottom: {
       type: Boolean,
       default: () => false
@@ -137,6 +166,10 @@ export default {
     messageStyling: {
       type: Boolean,
       default: () => false
+    },
+    inputEnabled: {
+      type: Boolean,
+      default: () => true
     }
   },
   computed: {

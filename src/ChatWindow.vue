@@ -1,6 +1,7 @@
 <template>
-  <div class="sc-chat-window" :class="{opened: isOpen, closed: !isOpen}">
+  <div class="sc-chat-window" :class="{opened: isOpen, closed: !isOpen}" :style="{ width: styles.window.width, height: styles.window.height, bottom: styles.window.bottom, right: styles.window.right }">
     <Header
+      v-if="styles.header.visible"
       :title="title"
       :imageUrl="titleImageUrl"
       :onClose="onClose"
@@ -19,16 +20,19 @@
       :colors="colors"
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :messageStyling="messageStyling"
+      :styles="styles"
     />
     <UserInput
-      v-if="!showUserList"
+      v-if="!showUserList && inputEnabled"
       :showEmoji="showEmoji"
       :onSubmit="onUserInputSubmit"
       :suggestions="getSuggestions()"
       :showFile="showFile"
       :placeholder="placeholder"
       :colors="colors"
-      :onKeyUp="onKeyUp" />
+      :onKeyUp="onKeyUp"
+      :styles="styles"
+      :inputEnabled="inputEnabled" />
   </div>
 </template>
 
@@ -105,6 +109,14 @@ export default {
     messageStyling: {
       type: Boolean,
       required: true
+    },
+    styles: {
+      type: Object,
+      required: true
+    },
+    inputEnabled: {
+      type: Boolean,
+      required: true
     }
   },
   data() {
@@ -145,7 +157,7 @@ export default {
   justify-content: space-between;
   transition: 0.3s ease-in-out;
   border-radius: 10px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .sc-chat-window.closed {
